@@ -1,5 +1,6 @@
 Question 3:
 What is abstraction in java, how many ways can we implement abstraction, write proper java program and how to implement abstraction.
+
 Answer:
 Abstraction in Java is the process of hiding the implementation details of a class and exposing only the necessary features or behaviors to the outside world. 
 There are two main ways to implement abstraction in Java:
@@ -15,7 +16,7 @@ There are two main ways to implement abstraction in Java:
 •	Classes can implement one or multiple interfaces, providing implementations for the methods declared in those interfaces.
 •	To implement an interface, you use the `implements` keyword.
 
-Here's an example demonstrating abstraction using both abstract classes and interfaces:
+Example:
 
 USING INTERFACES:
 // Interface
