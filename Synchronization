@@ -2,65 +2,67 @@ Question 2:
 Write a java program to implement synchronization, write clear java coding steps how to do synchronization with java thread objects.
 
 Answer:
-Steps on how to do synchronization with java thread objects.
-Step 1: Define a shared resource class with synchronized methods.
-Step 2: Create multiple threads that access the shared resource.
-Step 3: Run the threads and observe synchronization in action.
 
-// Step 1: Define a shared resource class with synchronized methods
-class SharedResource {
-    // Shared variable
+class Example {
     private int count = 0;
 
-    // Synchronized method to increment count
     public synchronized void increment() {
         count++;
-        System.out.println("Incremented: " + count);
     }
 
-    // Synchronized method to decrement count
-    public synchronized void decrement() {
-        count--;
-        System.out.println("Decremented: " + count);
+    public synchronized int getCount() {
+        return count;
     }
 }
 
-// Step 2: Create multiple threads that access the shared resource
-class MyThread extends Thread {
-    private SharedResource resource;
+class Incrementer implements Runnable {
+    private Example example;
+    private int increments;
 
-    public MyThread(SharedResource resource) {
-        this.resource = resource;
+    public Incrementer(Example example, int increments) {
+        this.example = example;
+        this.increments = increments;
     }
 
     @Override
     public void run() {
-        // Access the shared resource
-        resource.increment();
-        resource.decrement();
+        for (int i = 0; i < increments; i++) {
+            example.increment();
+        }
     }
 }
 
 public class SynchronizationExample {
     public static void main(String[] args) {
-        // Step 3: Run the threads and observe synchronization in action
-        // Create a shared resource
-        SharedResource resource = new SharedResource();
+        Example example = new Example();
 
-        // Create multiple threads
-        MyThread thread1 = new MyThread(resource);
-        MyThread thread2 = new MyThread(resource);
+        // Two threads increment the counter
+        Thread thread1 = new Thread(new Incrementer(example, 1000));
+        Thread thread2 = new Thread(new Incrementer(example, 1000));
 
-        // Start the threads
         thread1.start();
         thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Final Count: " + example.getCount());
     }
 }
-```
 
-Explanation:
-1. We define a `SharedResource` class with synchronized methods `increment()` and `decrement()`. These methods ensure that only one thread can execute them at a time.
-2. We create a `MyThread` class that extends `Thread` and takes a `SharedResource` object in its constructor. Each thread will operate on the same shared resource.
-3. In the `run()` method of `MyThread`, we call the `increment()` and `decrement()` methods of the shared resource.
-4. In the `main()` method, we create a `SharedResource` object and two `MyThread` objects.
-5. We start both threads, and since the methods in the `SharedResource` class are synchronized, only one thread can execute them at a time, ensuring thread safety.
+
+STEPS:
+
+1.Identify Shared Resource: Determine the data or resource accessed by multiple threads.
+2. Choose Synchronization Mechanism: Decide on synchronization technique (e.g., `synchronized` keyword).
+3. Synchronize Critical Sections: Use synchronization mechanism to protect critical sections where shared resource is accessed.
+4. Define Shared Resource Class: Create a class encapsulating the shared resource.
+5. Implement Synchronization: Apply synchronization mechanism to critical methods or blocks.
+6. Create Runnable Tasks: Implement `Runnable` interface for tasks accessing shared resource.
+7. Instantiate and Start Threads: Create threads with `Runnable` tasks and start them.
+8. Wait for Threads to Complete: Use `join()` to ensure all threads finish execution.
+9. Retrieve final state of shared resource after threads complete.
